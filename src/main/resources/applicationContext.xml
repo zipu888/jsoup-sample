@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/aop
+			http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+			http://www.springframework.org/schema/tx
+			http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+			http://www.springframework.org/schema/mvc
+			http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <!--引入jdbc配置文件 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+                <value>classpath:lucence.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--定义扫描组件的包 这样 就能直接从springApplicationContext get Bean了-->
+    <context:component-scan base-package="com.xiaohao.collection"/>
+
+    <!-- 默认的注解映射的支持 -->
+    <mvc:annotation-driven />
+
+
+    <!--定义lucene相关信息-->
+    <bean name="indexWriter" class="org.apache.lucene.index.IndexWriter">
+        <constructor-arg ref="simpleFSDirectory" index="0"></constructor-arg>
+        <constructor-arg ref="indexWriterConfig" index="1"></constructor-arg>
+    </bean>
+    <bean id="simpleFSDirectory" class="org.apache.lucene.store.SimpleFSDirectory">
+        <constructor-arg ref="indexFile" ></constructor-arg>
+        <constructor-arg ref="simpleFSLockFactory"></constructor-arg>
+    </bean>
+    <bean id="indexFile" class="java.io.File">
+        <constructor-arg value="${index.path}"></constructor-arg>
+    </bean>
+    <bean id="simpleFSLockFactory" class="org.apache.lucene.store.SimpleFSLockFactory"></bean>
+
+    <bean id="indexWriterConfig" class="org.apache.lucene.index.IndexWriterConfig">
+        <constructor-arg type="org.apache.lucene.util.Version" value="LUCENE_44"></constructor-arg>
+        <constructor-arg ref="analyzer"></constructor-arg>
+    </bean>
+
+    <bean id="analyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer">
+      <constructor-arg type="org.apache.lucene.util.Version" value="LUCENE_44"></constructor-arg>
+    </bean>
+
+    <bean class="com.xiaohao.collection.disruptor.MQServcie" init-method="init" destroy-method="destroy"></bean>
+
+    <!-- 视图解释类 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/"/>
+        <property name="suffix" value=".jsp"/><!--可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑  -->
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+    </bean>
+    <!-- springMvc总的错误处理-->
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"
+          p:defaultErrorView="/error/error"
+          p:defaultStatusCode="500"
+          p:warnLogCategory="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    </bean>
+
+    <!--对静态资源文件的访问-->
+   <!-- <mvc:resources mapping="/image/**" location="/image/" />
+    <mvc:resources mapping="/javascript/**" location="/javascript/" />
+    <mvc:resources mapping="/css/**" location="/css/" />-->
+
+    <!--配置spring 支持文件上传-->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver" p:maxUploadSize="50000"></bean>
+    <!--定义datasource-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" p:maxIdle="10" p:validationQueryTimeout="10"
+          p:driverClassName="${driverClassName}"
+          p:url="${url}"
+          p:username="${username}"
+          p:password="${password}">
+    </bean>
+
+    <!--实物管理器的配置-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+          p:dataSource-ref="dataSource">
+    </bean>
+    <!-- 开始注解管理事务-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- mybatis会话工厂 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:xml/mybatis.xml"/>
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--<property name="annotationClass" value="org.springframework.stereotype.Repository"/>-->
+        <property name="basePackage" value="com.xiaohao.collection.mapper"/>
+       <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!--&lt;!&ndash; log4jdbc &ndash;&gt;-->
+    <!--<bean id="log4jdbcInterceptor" class="net.sf.log4jdbc.DataSourceSpyInterceptor" />-->
+    <!--<bean id="dataSourceLog4jdbcAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">-->
+        <!--<property name="interceptorNames">-->
+            <!--<list>-->
+                <!--<value>log4jdbcInterceptor</value>-->
+            <!--</list>-->
+        <!--</property>-->
+        <!--<property name="beanNames">-->
+            <!--<list>-->
+                <!--<value>dataSource</value>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+    <!--定义使用异步服务的日志操作服务-->
+   <!--<bean id="mqService" init-method="init" class="com.xiaohao.cms.service.MQServcie">-->
+
+   <!--</bean>-->
+
+    <!--定义springMVC拦截器 给拦截器注入mqService来处理请求日志-->
+   <!--<mvc:interceptors>-->
+       <!--<mvc:interceptor>-->
+           <!--<mvc:mapping path="/*.action"/>-->
+           <!--<bean name="myInterceptor" class="com.xiaohao.cms.interceptor.AccessLogInterceptor">-->
+               <!--<property name="mqServcie">-->
+                <!--<ref bean="mqService"></ref>-->
+               <!--</property>-->
+           <!--</bean>-->
+       <!--</mvc:interceptor>-->
+   <!--</mvc:interceptors>-->
+
+   <!--国际化配置-->
+    <!--<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">-->
+        <!--<property name="basenames">-->
+            <!--<list>-->
+                <!--<value>message</value>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+
+
+
+
+</beans>
