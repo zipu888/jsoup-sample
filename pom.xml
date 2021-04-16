@@ -10,7 +10,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <mysql.connector.version>5.1.12</mysql.connector.version>
+        <mysql.connector.version>8.0.16</mysql.connector.version>
         <mybatis.version>3.2.5</mybatis.version>
         <springframework.version>3.2.8.RELEASE</springframework.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
