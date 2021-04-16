@@ -87,10 +87,16 @@ public class Starter {
                 Document foodDetail = Jsoup.connect(foodDetailUrl)
                         .userAgent("Mozilla").get();
                 Elements foodDetails =foodDetail.select(".lor");
+                Elements foodNameEle = foodDetail.select(".nranr strong");
+
+                insertFood.setFoodName(foodNameEle.text().replace("的营养成分表",""));
                 Iterator<Element> foodDetailsIter =foodDetails.iterator();
                 int foodDetailIndex=0;
                 while (foodDetailsIter.hasNext()) {
                     Element foodDetailsEle = foodDetailsIter.next();
+
+
+
                     if(foodDetailIndex==0){
                         insertFood.setCal(new BigDecimal(foodDetailsEle.text()));
                     }
