@@ -13,13 +13,13 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 
-@Repository("eventHandler")
+//@Repository("eventHandler")
 public class MQHandler implements EventHandler<MQLogEvent>  {
 
     @Resource(name="indexWriter")
     IndexWriter indexWriter;
 
-    @Override
+    //@Override
     public void onEvent(MQLogEvent mqLogEvent, long l, boolean b) throws Exception {
         Document data =(Document)mqLogEvent.getData();
         if(data!=null){

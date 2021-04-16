@@ -43,7 +43,7 @@ public class EntityUtil {
 	private String type_blob = "blob";
 
 
-	private String moduleName = "collection"; // 对应模块名称（根据自己模块做相应调整!!!务必修改^_^）
+	private String moduleName = "food"; // 对应模块名称（根据自己模块做相应调整!!!务必修改^_^）
 
 	private String bean_path = "d:/entity_bean";
 	private String mapper_path = "d:/entity_mapper";
@@ -55,7 +55,7 @@ public class EntityUtil {
 	private String driverName = "com.mysql.jdbc.Driver";
 	private String user = "root";
 	private String password = "xiaohao";
-	private String url = "jdbc:mysql://192.168.1.20:3306/" + moduleName + "?characterEncoding=utf8";
+	private String url = "jdbc:mysql://localhost:3306/" + moduleName + "?characterEncoding=utf8";
 
 	private String tableName = null;
 	private String beanName = null;

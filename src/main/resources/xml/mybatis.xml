@@ -13,6 +13,10 @@
 
     <mappers>
         <mapper resource="xml/BlogMapper.xml" />
+        <mapper resource="xml/FoodsMapper.xml" />
+        <mapper resource="xml/FoodMapper.xml" />
+        <mapper resource="xml/CuisineMapper.xml" />
+        <mapper resource="xml/UsefoodMapper.xml" />
     </mappers>
 
 </configuration>

@@ -34,30 +34,30 @@
     <mvc:annotation-driven />
 
 
-    <!--定义lucene相关信息-->
-    <bean name="indexWriter" class="org.apache.lucene.index.IndexWriter">
-        <constructor-arg ref="simpleFSDirectory" index="0"></constructor-arg>
-        <constructor-arg ref="indexWriterConfig" index="1"></constructor-arg>
-    </bean>
-    <bean id="simpleFSDirectory" class="org.apache.lucene.store.SimpleFSDirectory">
-        <constructor-arg ref="indexFile" ></constructor-arg>
-        <constructor-arg ref="simpleFSLockFactory"></constructor-arg>
-    </bean>
-    <bean id="indexFile" class="java.io.File">
-        <constructor-arg value="${index.path}"></constructor-arg>
-    </bean>
-    <bean id="simpleFSLockFactory" class="org.apache.lucene.store.SimpleFSLockFactory"></bean>
+<!--    &lt;!&ndash;定义lucene相关信息&ndash;&gt;-->
+<!--    <bean name="indexWriter" class="org.apache.lucene.index.IndexWriter">-->
+<!--        <constructor-arg ref="simpleFSDirectory" index="0"></constructor-arg>-->
+<!--        <constructor-arg ref="indexWriterConfig" index="1"></constructor-arg>-->
+<!--    </bean>-->
+<!--    <bean id="simpleFSDirectory" class="org.apache.lucene.store.SimpleFSDirectory">-->
+<!--        <constructor-arg ref="indexFile" ></constructor-arg>-->
+<!--        <constructor-arg ref="simpleFSLockFactory"></constructor-arg>-->
+<!--    </bean>-->
+<!--    <bean id="indexFile" class="java.io.File">-->
+<!--        <constructor-arg value="${index.path}"></constructor-arg>-->
+<!--    </bean>-->
+<!--    <bean id="simpleFSLockFactory" class="org.apache.lucene.store.SimpleFSLockFactory"></bean>-->
 
-    <bean id="indexWriterConfig" class="org.apache.lucene.index.IndexWriterConfig">
-        <constructor-arg type="org.apache.lucene.util.Version" value="LUCENE_44"></constructor-arg>
-        <constructor-arg ref="analyzer"></constructor-arg>
-    </bean>
+<!--    <bean id="indexWriterConfig" class="org.apache.lucene.index.IndexWriterConfig">-->
+<!--        <constructor-arg type="org.apache.lucene.util.Version" value="LUCENE_44"></constructor-arg>-->
+<!--        <constructor-arg ref="analyzer"></constructor-arg>-->
+<!--    </bean>-->
 
-    <bean id="analyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer">
-      <constructor-arg type="org.apache.lucene.util.Version" value="LUCENE_44"></constructor-arg>
-    </bean>
+<!--    <bean id="analyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer">-->
+<!--      <constructor-arg type="org.apache.lucene.util.Version" value="LUCENE_44"></constructor-arg>-->
+<!--    </bean>-->
 
-    <bean class="com.xiaohao.collection.mq.MQServcie" init-method="init" destroy-method="destroy"></bean>
+<!--    <bean class="com.xiaohao.collection.disruptor.MQServcie" init-method="init" destroy-method="destroy"></bean>-->
 
     <!-- 视图解释类 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

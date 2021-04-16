@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 public class MQServcie {
 
     //注入我们的事件处理器 用来处理队列中的数据
-    @Resource(name = "eventHandler")
+    //@Resource(name = "eventHandler")
     MQHandler mqHandler;
 
     private int bufferSize = 2048;
